@@ -5,8 +5,8 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import models
 
-from choper.models import ChessOpening, ChessGame
-from choper.serializers import ChessOpeningSerializer, ChessGameSerializer
+from choper.models import ChessOpeningTree, ChessOpeningTest
+from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTestSerializer
 
 import logging
 
@@ -61,20 +61,20 @@ def perform_detail(request, id, model, serializerModel):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-def opening_list(request):
-    return perform_list(request, ChessOpening, ChessOpeningSerializer)
+def openingTree_list(request):
+    return perform_list(request, ChessOpeningTree, ChessOpeningTreeSerializer)
 
 
-def opening_detail(request, id):
-    return perform_detail(request, id, ChessOpening, ChessOpeningSerializer)
+def openingTree_detail(request, id):
+    return perform_detail(request, id, ChessOpeningTree, ChessOpeningTreeSerializer)
 
 
-def game_list(request):
-    return perform_list(request, ChessGame, ChessGameSerializer)
+def openingTest_list(request):
+    return perform_list(request, ChessOpeningTest, ChessOpeningTestSerializer)
 
 
-def game_detail(request, id):
-    return perform_detail(request, id, ChessGame, ChessGameSerializer)
+def openingTest_detail(request, id):
+    return perform_detail(request, id, ChessOpeningTest, ChessOpeningTestSerializer)
 
 
 """
