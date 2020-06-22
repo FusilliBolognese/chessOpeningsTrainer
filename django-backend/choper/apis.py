@@ -5,8 +5,8 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import models
 
-from choper.models import ChessOpeningTree, ChessOpeningTest
-from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTestSerializer
+from choper.models import ChessOpeningTree, ChessOpeningTraining
+from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTrainingSerializer
 
 import logging
 
@@ -70,11 +70,11 @@ def openingTree_detail(request, id):
 
 
 def openingTest_list(request):
-    return perform_list(request, ChessOpeningTest, ChessOpeningTestSerializer)
+    return perform_list(request, ChessOpeningTraining, ChessOpeningTrainingSerializer)
 
 
 def openingTest_detail(request, id):
-    return perform_detail(request, id, ChessOpeningTest, ChessOpeningTestSerializer)
+    return perform_detail(request, id, ChessOpeningTraining, ChessOpeningTrainingSerializer)
 
 
 """

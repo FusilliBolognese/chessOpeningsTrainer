@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework.serializers import ModelSerializer
-from choper.models import ChessOpeningTree, ChessOpeningTest
+from choper.models import ChessOpeningTree, ChessOpeningTraining
 
 
 class ChessOpeningTreeSerializer(ModelSerializer):
@@ -9,7 +9,7 @@ class ChessOpeningTreeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ChessOpeningTestSerializer(ModelSerializer):
+class ChessOpeningTrainingSerializer(ModelSerializer):
     class Meta:
-        model = ChessOpeningTest
+        model = ChessOpeningTraining
         fields = '__all__'

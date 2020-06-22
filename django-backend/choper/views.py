@@ -3,8 +3,8 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.viewsets import ModelViewSet
 
-from choper.models import ChessOpeningTree, ChessOpeningTest
-from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTestSerializer
+from choper.models import ChessOpeningTree, ChessOpeningTraining
+from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTrainingSerializer
 
 
 class ChessOpeningTreeViewSet(ModelViewSet):
@@ -12,6 +12,6 @@ class ChessOpeningTreeViewSet(ModelViewSet):
     serializer_class = ChessOpeningTreeSerializer
 
 
-class ChessOpeningTestViewSet(ModelViewSet):
-    queryset = ChessOpeningTest.objects.all()
-    serializer_class = ChessOpeningTestSerializer
+class ChessOpeningTrainingViewSet(ModelViewSet):
+    queryset = ChessOpeningTraining.objects.all()
+    serializer_class = ChessOpeningTrainingSerializer

@@ -13,7 +13,7 @@ class ChessOpeningTree(models.Model):
         self.game = pgn.read_game(self.pgn_text)
 
 
-class ChessOpeningTest(models.Model):
+class ChessOpeningTraining(models.Model):
     COLORS = [
         ('w', 'blanc'),
         ('b', 'noir'),
@@ -31,9 +31,9 @@ class ChessOpeningTest(models.Model):
     def __str__(self):
         return super().__str__()
 
-    def play(self, move: string):
+    def play(self, move):
         pass
         # is a correct format move ? -> format test
         # is a legal move ? -> validate the move with chess rules
         # is a correct move regarding the opening tree line / variation ? -> check with de opening tree moves
-        # if 
+        # if

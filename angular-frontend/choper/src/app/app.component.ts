@@ -1,6 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 
-declare var Chessground: any;
+// declare var Chessground: any;
 
 @Component({
   selector: 'app-root',
@@ -9,14 +9,14 @@ declare var Chessground: any;
 })
 export class AppComponent implements AfterViewInit {
   title = 'choper';
-  //chess = new Chess();
-
+  // chess = new Chess();
+  /*
   options = {
     orientation: 'white'
   };
 
   ground = Chessground(document.getElementById("ground1"), this.options);
-
+  */
   ngAfterViewInit() {
   }
 
