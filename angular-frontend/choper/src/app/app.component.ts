@@ -9,15 +9,8 @@ import { Component, AfterViewInit } from '@angular/core';
 })
 export class AppComponent implements AfterViewInit {
   title = 'choper';
-  // chess = new Chess();
-  /*
-  options = {
-    orientation: 'white'
-  };
-
-  ground = Chessground(document.getElementById("ground1"), this.options);
-  */
   ngAfterViewInit() {
   }
 
 }
+

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as cgTypes from 'chessground/types';
 import { State } from 'chessground/state';
 import { Config } from 'chessground/config';
 
+declare var require: any;
 const chessgroundjs = require('chessground').Chessground;
-const chessjs = require('chess.js');
+
+// const chessjs = require('chess.js');
 
 @Component({
   selector: 'app-chessboard',
@@ -12,58 +14,51 @@ const chessjs = require('chess.js');
   styleUrls: ['./chessboard.component.css']
 })
 export class ChessboardComponent implements OnInit {
-  game: any;
-  board: any;
+  // game = new ChessGame();
+  @Input() board;
+
   promotions = [];
   showThreats = true;
 
   constructor() {
-    this.game = chessjs();
   }
 
   ngOnInit(): void {
     const boardConfig: Config = {
-      fen: this.game.fen(),
+      // fen: this.game.fen(),
       coordinates: true,
       movable: {
         free: false,
-        color: this.toColor(),
-        dests: this.possibleMoves(),
+        // color: this.game.turn(),
+        // dests: this.game.possibleMoves(),
         // events: { after: this.onBoardAfterMove() }
       },
       events: {
-        move: this.onBoardAfterMove()
-      }
+        move: this.onBoardAfterMove(),
+      },
+      draggable: {
+        showGhost: false,
+      },
     };
     this.board = chessgroundjs(document.getElementById('ground'), boardConfig);
-    console.log(JSON.stringify(this.game));
+    // console.log(JSON.stringify(this.game));
   }
 
+  /*
   toColor(): cgTypes.Color {
     return (this.game.turn() === 'w') ? 'white' : 'black';
   }
-
+  */
+  /*
   boardState(): string {
     return JSON.stringify(this.board.state.movable.dests);
   }
+  */
 
-  possibleMoves() {
-    const dests = {};
-    this.game.SQUARES.forEach(
-      square => {
-        const ms = this.game.moves({ square, verbose: true });
-        if (ms.length) {
-          dests[square] = ms.map(m => m.to);
-        }
-      }
-    );
-    return dests;
-  }
 
-  possibleMovesStr(): string {
-    return JSON.stringify(this.possibleMoves());
-  }
 
+
+  /*
   opponentMoves() {
     let moves = [];
     let turn = this.game.turn();
@@ -101,64 +96,68 @@ export class ChessboardComponent implements OnInit {
     this.game.load_pgn(originalPGN);
     return moves;
   }
-
-
+  */
+  /*
   opponentMovesStr(): string {
     return JSON.stringify(this.opponentMoves());
   }
-
+  */
+  /*
   private moveIsCheck(move): boolean {
     return move.san.includes('+') ? true : false;
   }
-
+  */
+  /*
   private moveIsCapture(move): boolean {
     return move.san.includes('x') ? true : false;
   }
-
-
-  isPromotion(orig: cgTypes.Key, dest: cgTypes.Key): boolean {
-    const filteredPromotions = this.promotions.filter(move => move.from === orig && move.to === dest);
-    return filteredPromotions.length > 0; // The current movement is a promotion
-  }
-
-  calculatePromotions() {
-    const moves = this.game.moves({ verbose: true });
-    this.promotions = [];
-    moves.forEach(move => {
-      if (move.promotion) {
-        this.promotions.push(move);
-      }
-    });
-  }
-
-  countThreats(color: cgTypes.Color) {
-    const threats = {};
-    let captures = 0;
-    let checks = 0;
-    let moves = this.game.moves({ verbose: true });
-    if (color !== this.toColor()) {
-      moves = this.opponentMoves();
-    }
-    if (moves.length === 0) {
-      return null; // It´s an invalid position
-    }
-    moves.forEach(move => {
-      if (this.moveIsCapture(move)) {
-        captures++;
-      }
-      if (this.moveIsCheck(move)) {
-        checks++;
-      }
-    });
-    // promotions count as 4 moves. This remove those duplicates moves.
-    // threats[`legal_${color}`] = uniques(moves.map(move => move.from + move.to)).length;
-    threats[`checks_${color}`] = checks;
-    threats[`threat_${color}`] = captures;
-    threats[`turn`] = color;
-    return threats;
-  }
-
-
+  */
+  /*
+   isPromotion(orig: cgTypes.Key, dest: cgTypes.Key): boolean {
+     const filteredPromotions = this.promotions.filter(move => move.from === orig && move.to === dest);
+     return filteredPromotions.length > 0; // The current movement is a promotion
+   }
+   */
+  /*
+   calculatePromotions() {
+     const moves = this.game.moves({ verbose: true });
+     this.promotions = [];
+     moves.forEach(move => {
+       if (move.promotion) {
+         this.promotions.push(move);
+       }
+     });
+   }
+   */
+  /*
+   countThreats(color: cgTypes.Color) {
+     const threats = {};
+     let captures = 0;
+     let checks = 0;
+     let moves = this.game.moves({ verbose: true });
+     if (color !== this.toColor()) {
+       moves = this.opponentMoves();
+     }
+     if (moves.length === 0) {
+       return null; // It´s an invalid position
+     }
+     moves.forEach(move => {
+       if (this.moveIsCapture(move)) {
+         captures++;
+       }
+       if (this.moveIsCheck(move)) {
+         checks++;
+       }
+     });
+     // promotions count as 4 moves. This remove those duplicates moves.
+     // threats[`legal_${color}`] = uniques(moves.map(move => move.from + move.to)).length;
+     threats[`checks_${color}`] = checks;
+     threats[`threat_${color}`] = captures;
+     threats[`turn`] = color;
+     return threats;
+   }
+   */
+  /*
   paintOpponentThreats() {
     const opponentMoves = this.opponentMoves();
     const threats = [];
@@ -176,7 +175,8 @@ export class ChessboardComponent implements OnInit {
     );
     this.board.setShapes(threats);
   }
-
+  */
+  /*
   paintThreats() {
     const moves = this.game.moves({ verbose: true });
     console.log(moves);
@@ -194,45 +194,55 @@ export class ChessboardComponent implements OnInit {
     );
     this.board.setShapes(threats);
   }
-
+  */
+  /*
   afterMove() {
     if (this.showThreats) {
       this.paintThreats();
       //this.paintOpponentThreats();
     }
-    /*
+    //
     const threats = this.countThreats(this.toColor()) || {};
     threats['history'] = this.game.history();
     threats['fen'] = this.game.fen();
     //this.$emit('onMove', threats);
     console.log(threats);
-    */
+    //
   }
+  */
 
+  /*
+  possibleMovesStr(): string {
+    return JSON.stringify(this.game.possibleMoves());
+  }
+  */
   onPromotion() {
     return 'q';
   }
 
   onBoardAfterMove() {
     return (orig: cgTypes.Key, dest: cgTypes.Key, capturedPiece?: cgTypes.Piece) => {
+      /*
       console.log(orig + ' ' + dest + ' ' + capturedPiece);
-      let promoteTo = '';
-      if (this.isPromotion(orig, dest)) {
+      let promoteTo = 'q';
+      if (this.game.isPromotion(orig, dest)) {
         promoteTo = this.onPromotion();
       }
-      const move = this.game.move({ from: orig, to: dest, promotion: promoteTo });
-
+      // const move = this.game.move({ from: orig, to: dest, promotion: promoteTo });
+      if (this.game.move(orig, dest, promoteTo)) {
+      }
       this.board.set(
         {
           fen: this.game.fen(),
-          turnColor: this.toColor(),
+          turnColor: this.game.turn(),
           movable: {
-            color: this.toColor(),
-            dests: this.possibleMoves(),
+            color: this.game.turn(),
+            dests: this.game.possibleMoves(),
           }
         });
-      this.calculatePromotions();
-      this.afterMove();
+      // this.calculatePromotions();
+      // this.afterMove();
+      */
     };
   }
 

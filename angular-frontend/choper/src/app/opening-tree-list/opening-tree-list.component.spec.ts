@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OpeningTrainingComponent } from './opening-training.component';
+import { OpeningTreeListComponent } from './opening-tree-list.component';
 
-describe('OpeningTrainingComponent', () => {
-  let component: OpeningTrainingComponent;
-  let fixture: ComponentFixture<OpeningTrainingComponent>;
+describe('OpeningTreeListComponent', () => {
+  let component: OpeningTreeListComponent;
+  let fixture: ComponentFixture<OpeningTreeListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpeningTrainingComponent ]
+      declarations: [ OpeningTreeListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OpeningTrainingComponent);
+    fixture = TestBed.createComponent(OpeningTreeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -10,6 +10,12 @@
   background-size: contain;
 }
 
+.marble {
+  background-image: url('./assets/images/board/marble.jpg');
+  background-size: contain;
+}
+
+
 .merida piece.pawn.white {
   background-image: url('./assets/images/pieces/merida/wP.svg');
 }
@@ -117,7 +123,6 @@ cg-helper {
   width: 12.5%;
   padding-bottom: 12.5%;
   display: table;
-  /* hack: round to full pixel size in chrome */
   bottom: 0;
 }
 

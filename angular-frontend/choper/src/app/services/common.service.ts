@@ -9,15 +9,16 @@ import { catchError, tap } from 'rxjs/operators';
 export class CommonService {
 
     endPoint: string;
-    http: HttpClient;
     httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    constructor() {
+    constructor(private http: HttpClient) {
+
     }
 
     private log(message: string) {
+        console.log(message);
         // this.messageService.add(`HeroService : ${message}`);
     }
 
@@ -38,7 +39,7 @@ export class CommonService {
     getItems<T>(): Observable<T[]> {
         return this.http.get<T[]>(this.endPoint)
             .pipe(
-                tap(_ => this.log('getting items...')),
+                tap(_ => this.log('CommonService.getItems : getting items...')),
                 catchError(this.handleError<T[]>('getItems', []))
             );
     }
@@ -46,7 +47,7 @@ export class CommonService {
     getItem<T>(id: string): Observable<T> {
         return this.http.get<T>(this.endPoint + id)
             .pipe(
-                tap(_ => this.log(`getting item ${id}`)),
+                tap(_ => this.log(`CommonService.getItem : getting item ${id}`)),
                 catchError(this.handleError<T>('getItem id=${id}'))
             );
     }
@@ -54,7 +55,7 @@ export class CommonService {
     addItem<T>(data: any): Observable<T> {
         return this.http.post<T>(this.endPoint, data, this.httpOptions)
             .pipe(
-                tap(_ => this.log(`adding item ${data}`)),
+                tap(_ => this.log(`CommonService.addItem : adding item ${data}`)),
                 catchError(this.handleError<T>('addItem'))
             );
     }
@@ -62,7 +63,7 @@ export class CommonService {
     updateItem<T>(id: string, data: any): Observable<T> {
         return this.http.put<T>(this.endPoint + id, data, this.httpOptions)
             .pipe(
-                tap(_ => this.log(`updating item ${id}`)),
+                tap(_ => this.log(`CommonService.updateItem : updating item ${id}`)),
                 catchError(this.handleError<T>('updateItem'))
             );
     }
@@ -70,7 +71,7 @@ export class CommonService {
     deleteItem<T>(id: string): Observable<T> {
         return this.http.delete<T>(this.endPoint + id, this.httpOptions)
             .pipe(
-                tap(_ => this.log(`deleting item ${id}`)),
+                tap(_ => this.log(`CommonService.deleteItem : deleting item ${id}`)),
                 catchError(this.handleError<T>('deleteItem'))
             );
     }

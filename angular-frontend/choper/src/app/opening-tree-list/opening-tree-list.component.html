@@ -1,0 +1,32 @@
+<p>opening-tree-list works!</p>
+
+<div>
+  <table width="100%">
+    <thead>
+      <tr>
+        <th class="cell-header">id</th>
+        <!--th class="cell-header">pgn</th-->
+        <th class="cell-header">name</th>
+        <th class="cell-header">ECO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items; index as i">
+        <td class="cell">{{item.id}}</td>
+        <!--td class="cell">{{o.pgn_text}}</td-->
+        <td class="cell">{{item.opening_name}}</td>
+        <td class="cell">{{item.eco_code}}</td>
+        <td class="cell">
+          <!-- a [routerLink]="['/flights',flight.id]">Edit</a-->
+          <button routerLink="/trainings/add/{{item.id}}">Training</button>
+          <button routerLink="/openings/{{item.id}}">Edit</button>
+          <!--button routerLink="/openings/add/{{o.id}}">Duplicate</button-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <button routerLink="/openings/add">New</button>
+</div>

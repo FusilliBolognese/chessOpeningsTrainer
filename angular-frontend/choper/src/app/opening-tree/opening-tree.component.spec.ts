@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OpeningTreeComponent } from './opening-tree.component';
+import { ChessOpeningTreeComponent } from './opening-tree.component';
 
-describe('OpeningTreeComponent', () => {
-  let component: OpeningTreeComponent;
-  let fixture: ComponentFixture<OpeningTreeComponent>;
+describe('ChessOpeningTreeComponent', () => {
+  let component: ChessOpeningTreeComponent;
+  let fixture: ComponentFixture<ChessOpeningTreeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpeningTreeComponent ]
+      declarations: [ ChessOpeningTreeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OpeningTreeComponent);
+    fixture = TestBed.createComponent(ChessOpeningTreeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

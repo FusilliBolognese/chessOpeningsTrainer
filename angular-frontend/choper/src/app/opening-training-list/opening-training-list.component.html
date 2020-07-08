@@ -1,0 +1,31 @@
+<p>opening-training-list works!</p>
+<div>
+  <table width="100%">
+    <thead>
+      <tr>
+        <th class="cell-header">id</th>
+        <th class="cell-header">date</th>
+        <th class="cell-header">score</th>
+        <th class="cell-header">opening_tree</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items; index as i">
+        <td class="cell">{{item.id}}</td>
+        <td class="cell">{{item.date_created}}</td>
+        <td class="cell">{{item.score}}</td>
+        <td class="cell">{{item.opening_tree}}</td>
+        <td class="cell">
+          <!-- a [routerLink]="['/flights',flight.id]">Edit</a-->
+          <!--button routerLink="/trainings/add/{{o.id}}">Training</button-->
+          <button routerLink="/trainings/{{item.id}}">Edit</button>
+          <!--button routerLink="/trainings/add/{{item.id}}">Duplicate</button-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <button routerLink="/trainings/add">New</button>
+</div>
