@@ -3,26 +3,27 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
+
 @Injectable({
     providedIn: 'root'
 })
-export class CommonService {
+export  class CommonService {
 
     endPoint: string;
     httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    constructor(private http: HttpClient) {
+    constructor(public http: HttpClient) {
 
     }
 
-    private log(message: string) {
+    log(message: string) {
         console.log(message);
         // this.messageService.add(`HeroService : ${message}`);
     }
 
-    private handleError<T>(operation = 'operation', result?: T) {
+    handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
 
             // TODO: send the error to remote logging infrastructure
@@ -35,6 +36,9 @@ export class CommonService {
             return of(result as T);
         };
     }
+}
+
+export class CommonListService extends CommonService {
 
     getItems<T>(): Observable<T[]> {
         return this.http.get<T[]>(this.endPoint)
@@ -44,19 +48,23 @@ export class CommonService {
             );
     }
 
-    getItem<T>(id: string): Observable<T> {
-        return this.http.get<T>(this.endPoint + id)
-            .pipe(
-                tap(_ => this.log(`CommonService.getItem : getting item ${id}`)),
-                catchError(this.handleError<T>('getItem id=${id}'))
-            );
-    }
-
     addItem<T>(data: any): Observable<T> {
         return this.http.post<T>(this.endPoint, data, this.httpOptions)
             .pipe(
                 tap(_ => this.log(`CommonService.addItem : adding item ${data}`)),
                 catchError(this.handleError<T>('addItem'))
+            );
+    }
+
+}
+
+export class CommonItemService extends CommonService {
+
+    getItem<T>(id: string): Observable<T> {
+        return this.http.get<T>(this.endPoint + id)
+            .pipe(
+                tap(_ => this.log(`CommonService.getItem : getting item ${id}`)),
+                catchError(this.handleError<T>('getItem id=${id}'))
             );
     }
 
@@ -75,6 +83,4 @@ export class CommonService {
                 catchError(this.handleError<T>('deleteItem'))
             );
     }
-
-
 }

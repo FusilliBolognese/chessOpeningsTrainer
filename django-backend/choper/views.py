@@ -5,6 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from choper.models import ChessOpeningTree, ChessOpeningTraining
 from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTrainingSerializer
+from choper.serializers import ChessOpeningTreeLightSerializer, ChessOpeningTrainingLightSerializer
 
 
 class ChessOpeningTreeViewSet(ModelViewSet):

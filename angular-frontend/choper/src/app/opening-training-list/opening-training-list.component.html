@@ -6,20 +6,18 @@
         <th class="cell-header">id</th>
         <th class="cell-header">date</th>
         <th class="cell-header">score</th>
-        <th class="cell-header">opening_tree</th>
+        <th class="cell-header">opening</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of items; index as i">
         <td class="cell">{{item.id}}</td>
-        <td class="cell">{{item.date_created}}</td>
+        <td class="cell">{{item.date_created | dateTimeFormat }}</td>
         <td class="cell">{{item.score}}</td>
-        <td class="cell">{{item.opening_tree}}</td>
+        <td class="cell">{{item.opening_tree | openingNameFormat}}</td>
         <td class="cell">
-          <!-- a [routerLink]="['/flights',flight.id]">Edit</a-->
-          <!--button routerLink="/trainings/add/{{o.id}}">Training</button-->
           <button routerLink="/trainings/{{item.id}}">Edit</button>
-          <!--button routerLink="/trainings/add/{{item.id}}">Duplicate</button-->
+          <button (click)="deleteItem(item)">Delete</button>
         </td>
       </tr>
     </tbody>

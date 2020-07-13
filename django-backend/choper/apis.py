@@ -8,44 +8,59 @@ from django.db import models
 
 from choper.models import ChessOpeningTree, ChessOpeningTraining
 from choper.serializers import ChessOpeningTreeSerializer, ChessOpeningTrainingSerializer
+from choper.serializers import ChessOpeningTrainingLightSerializer, ChessOpeningTreeLightSerializer
 
-import logging
 import chess
 import chess.pgn
 
 
-@csrf_exempt
-def perform_list(request, model, serializerModel):
-    logging.basicConfig(filename='app.log', level=logging.INFO)
+def getListData(model, modelLightSerializer):
+    items = model.objects.all()
+    serializer = modelLightSerializer(items, many=True)
+    print('[OK] getListData.serializer.data : ', serializer.data)
+    return JsonResponse(serializer.data, safe=False)
 
+
+def postNewItemData(request, modelSerializer):
+    item_data = JSONParser().parse(request)
+    print('[OK] postNewItemData.item_data : ', item_data)
+    serializer = modelSerializer(data=item_data)
+    if serializer.is_valid():
+        print('[OK] postNewItemData.serializer.validated_data : ',
+              serializer.validated_data)
+        serializer.save()
+        print('[OK] postNewItemData.serializer.data : ',
+              serializer.data)
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        print('[ERROR] postNewItemData.serializer.errors : ',
+              serializer.errors)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def deleteList(model):
+    model.objects.all().delete()
+    return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+def perform_list(request, model, modelSerializer, modelLightSerializer):
     """ GET returns all the objects of the collection """
     if request.method == 'GET':
-        items = model.objects.all()
-        serializer = serializerModel(items, many=True)
-        logging.info(serializer.data)
-        return JsonResponse(serializer.data, safe=False)
+        return getListData(model, modelLightSerializer)
 
     """ POST add a new object """
     if request.method == 'POST':
-        item_data = JSONParser().parse(request)
-        serializer = serializerModel(data=item_data)
-        if serializer.is_valid():
-            logging.info(serializer.validated_data)
-            serializer.save()
-            logging.info(serializer.data)
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return postNewItemData(request, modelSerializer)
 
-    """  """
+    """ DELTE all items of the collection """
     if request.method == 'DELETE':
-        model.objects.all().delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        deleteList(model)
 
 
 def getInstance(model, id):
     try:
         instance = model.objects.get(pk=id)
-        #print('instance = ' + instance)
+        print('[OK] getInstance.instance : ', instance)
         return instance
     except model.DoesNotExist:
         raise Http404('Not Found')
@@ -54,18 +69,25 @@ def getInstance(model, id):
 
 def getInstanceData(instance, serializerModel):
     serializer = serializerModel(instance)
+    print('[OK] getInstanceData.serializer.data : ', serializer.data)
     return JsonResponse(serializer.data, safe=False)
 
 
 def updateInstanceData(instance, request, serializerModel):
     item_data = JSONParser().parse(request)
+    print('[OK] updateInstanceData.item_data : ', item_data)
     serializer = serializerModel(instance, data=item_data)
     if serializer.is_valid():
-        logging.info(serializer.validated_data)
+        print('[OK] updateInstanceData.serializer.validated_data : ',
+              serializer.validated_data)
         serializer.save()
-        logging.info(serializer.data)
+        print('[OK] updateInstanceData.serializer.data : ',
+              serializer.data)
         return JsonResponse(serializer.data, safe=False)
-    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        print('[ERROR] updateInstanceData.serializer.errors : ',
+              serializer.errors)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def deleteInstance(instance):
@@ -73,7 +95,6 @@ def deleteInstance(instance):
     return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-@csrf_exempt
 def perform_detail(request, id, model, serializerModel):
 
     instance = getInstance(model, id)
@@ -89,7 +110,8 @@ def perform_detail(request, id, model, serializerModel):
 
 @csrf_exempt
 def openingTree_list(request):
-    return perform_list(request, ChessOpeningTree, ChessOpeningTreeSerializer)
+    # return perform_list(request, ChessOpeningTree, ChessOpeningTreeSerializer)
+    return perform_list(request, ChessOpeningTree, ChessOpeningTreeSerializer, ChessOpeningTreeLightSerializer)
 
 
 @csrf_exempt
@@ -99,89 +121,10 @@ def openingTree_detail(request, id):
 
 @csrf_exempt
 def openingTraining_list(request):
-    return perform_list(request, ChessOpeningTraining, ChessOpeningTrainingSerializer)
+    # return perform_list(request, ChessOpeningTraining, ChessOpeningTrainingSerializer)
+    return perform_list(request, ChessOpeningTraining, ChessOpeningTrainingSerializer, ChessOpeningTrainingLightSerializer)
 
 
 @csrf_exempt
 def openingTraining_detail(request, id):
     return perform_detail(request, id, ChessOpeningTraining, ChessOpeningTrainingSerializer)
-
-
-"""
-@csrf_exempt
-def opening_list(request):
-    # Get all
-    logging.basicConfig(filename='app.log', level=logging.INFO)
-    if request.method == 'GET':
-        items = ChessOpening.objects.all()
-        serializer = ChessOpeningSerializer(items, many=True)
-        logging.info(serializer.data)
-        return JsonResponse(serializer.data, safe=False)
-
-    if request.method == 'POST':
-        item_data = JSONParser().parse(request)
-        serializer = ChessOpeningSerializer(data=item_data)
-        if serializer.is_valid():
-            logging.info(serializer.validated_data)
-            serializer.save()
-            logging.info(serializer.data)
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == 'DELETE':
-        ChessOpening.objects.all().delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-
-@csrf_exempt
-def opening_detail(request, id):
-    try:
-        instance = ChessOpening.objects.get(pk=id)
-    except ChessOpening.DoesNotExist:
-        raise Http404('Element non trouvé')
-        # return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = ChessOpeningSerializer(instance)
-        logging.info(serializer.data)
-        return JsonResponse(serializer.data, safe=False)
-
-    if request.method == "PUT":
-        item_data = JSONParser().parse(request)
-        serializer = ChessOpeningSerializer(instance, data=item_data)
-        if serializer.is_valid():
-            logging.info(serializer.validated_data)
-            serializer.save()
-            logging.info(serializer.data)
-            return JsonResponse(serializer.data, safe=False)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "DELETE":
-        instance.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-
-@csrf_exempt
-def game_list(request):
-    logging.basicConfig(filename='app.log', level=logging.INFO)
-    if request.method == 'GET':
-        querySet = ChessGame.objects.orde
-        serializer = ChessGameSerializer(querySet, many=True)
-        logging.info(serializer.data)
-        return JsonResponse(serializer.data, safe=False)
-
-
-@csrf_exempt
-def game_detail(request, id):
-    try:
-        instance = ChessGame.objects.get(pk=id)
-    except ChessGame.DoesNotExist:
-        raise Http404('Element non trouvé')
-        # return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = ChessGameSerializer(instance)
-        logging.info(serializer.data)
-        return JsonResponse(serializer.data, safe=False)
-
-"""

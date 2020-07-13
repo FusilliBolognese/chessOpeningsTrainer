@@ -7,44 +7,78 @@ import io
 from collections import OrderedDict
 
 
-class ChessOpeningTreeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChessOpeningTree
-        fields = '__all__'
+class ChessOpeningTreeLightSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    eco_code = serializers.CharField()
+    opening_name = serializers.CharField()
 
 
-class ChessOpeningTrainingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChessOpeningTraining
-        fields = '__all__'
+class ChessOpeningTreeSerializer(ChessOpeningTreeLightSerializer):
+    pgn_text = serializers.CharField()
+
+    def create(self, validated_data):
+        return ChessOpeningTree.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.eco_code = validated_data.get('eco_code', instance.eco_code)
+        instance.opening_name = validated_data.get(
+            'opening_name', instance.opening_name)
+        instance.pgn_text = validated_data.get('pgn_text', instance.pgn_text)
+        instance.save()
+        return instance
+
+
+class ChessOpeningTrainingLightSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    date_created = serializers.DateTimeField(read_only=True)
+    date_lastmodified = serializers.DateTimeField(read_only=True)
+    opening_tree_id = opening_tree_id = serializers.PrimaryKeyRelatedField(
+        source='opening_tree',  queryset=ChessOpeningTree.objects.all(), )
+    variant = serializers.CharField(max_length=50, default='chess')
+    is_chess360 = serializers.BooleanField(default=False)
+    opening_tree = ChessOpeningTreeLightSerializer(
+        required=False, read_only=True)
+
+
+class ChessOpeningTrainingSerializer(ChessOpeningTrainingLightSerializer):
+    uci_text = serializers.CharField(allow_blank=True, allow_null=True)
+
+    def create(self, validated_data):
+        return ChessOpeningTraining.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """ opening_tree_id, variant, is_chess360 
+            -> are not able to be updated 
+            -> so, this data are not validated """
+        instance.uci_text = validated_data.get('uci_text', instance.uci_text)
+        instance.save()
+        return instance
 
     def to_representation(self, instance):
         """
         returns next fields from data base model :
             date_created -> can't be modified
             date_lastmodified -> auto update
-            variant -> can't be modified is a game is in progress
-            is_chess360 -> can't be modified is a game is in progress
-            opening_tree -> can't be modified is a game is in progress
-            uci_text
-            score -> auto increment on every move
-        returns next fields from calculation interpreted from uci_text :
-            move_number
-            pgn_text
-            turn
-            fen
-            legal_moves
+            variant -> can't be updated
+            is_chess360 -> can't be updated
+            opening_tree -> can't be updated
+            uci_text -> can be updated
+                returns next fields from calculation interpreted from uci_text :
+                    move_number
+                    pgn_text
+                    turn
+                    fen
+                    legal_moves
         """
 
         ret = super().to_representation(instance)
-
-        board = chess.Board()
 
         """
             generate the chess game with the sequence of moves :
             1. push the uci moves in the stack of the board
             2. build the game with the defined board
         """
+        board = chess.Board()
         uci_text = ret['uci_text']
         # print("uci text :", uci_text)
         if uci_text and (len(uci_text.strip()) > 0):
@@ -76,36 +110,6 @@ class ChessOpeningTrainingSerializer(serializers.ModelSerializer):
         for move in legal_moves:
             builder.append(board.uci(move))
         ret['legal_moves'] = builder
-        # print('to_representation : ', ret)
+
+        print('ChessOpeningTrainingSerializer.to_representation : ', ret)
         return ret
-
-    def to_internal_value(self, data):
-        """
-            date_created -> can't be modified
-            date_lastmodified -> auto update
-            variant -> can't be modified is a game is in progress
-            is_chess360 -> can't be modified is a game is in progress
-            opening_tree -> can't be modified is a game is in progress
-            uci_text
-            score -> auto increment on every move
-        """
-        ret = super().to_internal_value(data)
-
-        # ret is an OrderedDict
-        # see https://docs.python.org/3.8/library/collections.html#collections.OrderedDict
-        score = int(ret['score'])
-        #print('score : ', score)
-        score = score + 1
-        ret['score'] = str(score)
-        #print('to_internal_value : ', ret)
-        return ret
-
-
-"""
-class ChessMoveSerializer(serializers.BaseSerializer):
-    number = serializers.IntegerField()  # 1 à n
-    side = serializers.CharField()  # w ou b
-    fromSquare = serializers.IntegerField()  # from 0 to 63
-    toSquare = serializers.IntegerField()  # from 0 to 63
-    promotionType = serializers.CharField()  # q, b, n, r
-"""

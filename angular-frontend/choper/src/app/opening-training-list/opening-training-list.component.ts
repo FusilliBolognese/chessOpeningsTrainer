@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessOpeningTraining } from '../models/chess-opening-training.model';
-import { CommonService } from '../services/common.service';
+import { ChessOpeningTrainingListService, ChessOpeningTrainingService } from '../services/chessOpeningTraining.service';
 
 @Component({
   selector: 'app-opening-training-list',
@@ -10,8 +10,9 @@ import { CommonService } from '../services/common.service';
 export class ChessOpeningTrainingListComponent implements OnInit {
   items: ChessOpeningTraining[];
 
-  constructor(private service: CommonService) {
-    this.service.endPoint = 'http://localhost:3108/choper/api/trainings';
+  constructor(
+    private trainingListService: ChessOpeningTrainingListService,
+    private trainingService: ChessOpeningTrainingService) {
   }
 
   ngOnInit(): void {
@@ -19,7 +20,7 @@ export class ChessOpeningTrainingListComponent implements OnInit {
   }
 
   loadItems() {
-    this.service.getItems<ChessOpeningTraining>()
+    this.trainingListService.getItems<ChessOpeningTraining>()
       .subscribe(
         (data: ChessOpeningTraining[]) => {
           this.items = data;
@@ -32,4 +33,20 @@ export class ChessOpeningTrainingListComponent implements OnInit {
       );
   }
 
+  deleteItem(item: ChessOpeningTraining) {
+    this.trainingService.deleteItem<ChessOpeningTraining>(item.id)
+      .subscribe(
+        (data: ChessOpeningTraining) => {
+          console.log('ChessOpeningTrainingListComponent.deleteItem OK : ' + item.id);
+          const deletedIndex = this.items.indexOf(item);
+          if (deletedIndex >= 0) {
+            this.items.splice(deletedIndex, 1);
+          }
+        },
+        (error: any) => {
+          console.log('ChessOpeningTrainingListComponent.deleteItem KO : ' + error.toString());
+        }
+      );
+  }
 }
+

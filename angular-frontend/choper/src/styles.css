@@ -291,3 +291,6 @@ cg-board piece.fading {
 .cg-wrap coords.ranks coord {
   transform: translateY(39%);
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

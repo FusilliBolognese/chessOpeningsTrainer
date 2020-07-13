@@ -1,15 +1,27 @@
+import { ChessOpeningTree } from './chess-opening-tree.model';
+
 export class ChessOpeningTraining {
-    id: string;
-    date_created: Date;
-    pgn_text: string;
-    uci_text: string;
-    score: number;
-    side: string;
-    opening_tree: number;
-    eco_code: string;
-    fen: string;
-    turn: string;
-    move_number: number;
-    legal_moves: string[];
+    id = '';
+    date_created = '';
+    date_lastmodified = '';
+
+    opening_tree_id = '0';
+    variant = 'chess';
+    is_chess360 = false;
+    opening_tree = new ChessOpeningTree();
+
+    uci_text = '';
+    pgn_text = '';
+    turn = 'w';
+    move_number = 1;
+    fen = '';
+    legal_moves: string[] = [];
+
+    public constructor(init?: Partial<ChessOpeningTraining>) {
+        Object.assign(this, init);
+    }
+
+
+
 }
 

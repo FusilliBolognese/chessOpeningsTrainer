@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessOpeningTree } from '../models/chess-opening-tree.model';
-import { CommonService } from '../services/common.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
+import { ChessOpeningTreeService } from '../services/chessOpeningTree.service';
 
 @Component({
   selector: 'app-opening-tree',
@@ -14,10 +14,9 @@ export class ChessOpeningTreeComponent implements OnInit {
   itemId: string;
 
   constructor(
-    private service: CommonService,
+    private treeService: ChessOpeningTreeService,
     private route: ActivatedRoute,
     private location: Location) {
-    this.service.endPoint = 'http://localhost:3108/choper/api/openings/';
   }
 
   ngOnInit(): void {
@@ -32,7 +31,7 @@ export class ChessOpeningTreeComponent implements OnInit {
   }
 
   loadItem() {
-    this.service.getItem<ChessOpeningTree>(this.itemId)
+    this.treeService.getItem<ChessOpeningTree>(this.itemId)
       .subscribe(
         (data: ChessOpeningTree) => {
           this.item = data;

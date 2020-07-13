@@ -1,2 +1,16 @@
 <p>opening-training-create works!</p>
-<div id="ground" class="marble merida" style="width: 500px;height: 500px"></div>
+<!--div id="ground" class="marble merida" style="width: 500px;height: 500px"></div-->
+<br>
+
+<select [(ngModel)]="selectedTree" (ngModelChange)="onSelectionChange($event)" name="openingTree">
+  <option [ngValue]="null" disabled>Choose opening tree before submit</option>
+  <option *ngFor="let openingTree of allOpeningTrees" [ngValue]="openingTree">
+    {{openingTree | openingNameFormat }}
+  </option>
+</select>
+<br>
+<div *ngIf="selectedTree">
+  <p>Opening Tree : {{selectedTree | openingNameFormat}}</p>
+</div>
+<button type="button" (click)="submit()">Submit</button>
+<button type="button" (click)="cancel()">Cancel</button>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessOpeningTraining } from '../models/chess-opening-training.model';
-import { CommonService } from '../services/common.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Chessground } from 'chessground';
@@ -8,6 +7,7 @@ import * as chessgroundConfig from 'chessground/config';
 import * as chessgroundTypes from 'chessground/types';
 import * as chessgroundUtil from 'chessground/util';
 import * as chessgroundApi from 'chessground/api';
+import { ChessOpeningTrainingService } from '../services/chessOpeningTraining.service';
 
 @Component({
   selector: 'app-opening-training-base',
@@ -24,10 +24,9 @@ export class ChessOpeningTrainingBaseComponent implements OnInit {
   board: chessgroundApi.Api;
 
   constructor(
-    public service: CommonService,
+    public trainingService: ChessOpeningTrainingService,
     public route: ActivatedRoute,
     public location: Location) {
-    this.service.endPoint = 'http://localhost:3108/choper/api/trainings/';
     this.item = new ChessOpeningTraining();
   }
 
@@ -123,6 +122,10 @@ export class ChessOpeningTrainingBaseComponent implements OnInit {
     return dests;
   }
 
+  updateBoardConfig() {
+    this.board.set(this.getBoardConfig());
+  }
+
   onBoardAfterMove() {
     return (orig: chessgroundTypes.Key, dest: chessgroundTypes.Key, capturedPiece?: chessgroundTypes.Piece) => {
       if (this.item.uci_text) {
@@ -132,39 +135,17 @@ export class ChessOpeningTrainingBaseComponent implements OnInit {
       }
       console.log('ChessOpeningTrainingBaseComponent.onBoardAfterMove : this.item.uci_text = ' + this.item.uci_text);
       this.updateItem(this.item.id);
-
-      /*
-      console.log(orig + ' ' + dest + ' ' + capturedPiece);
-      let promoteTo = 'q';
-      if (this.game.isPromotion(orig, dest)) {
-        promoteTo = this.onPromotion();
-      }
-      // const move = this.game.move({ from: orig, to: dest, promotion: promoteTo });
-      if (this.game.move(orig, dest, promoteTo)) {
-      }
-      this.board.set(
-        {
-          fen: this.game.fen(),
-          turnColor: this.game.turn(),
-          movable: {
-            color: this.game.turn(),
-            dests: this.game.possibleMoves(),
-          }
-        });
-      // this.calculatePromotions();
-      // this.afterMove();
-      */
     };
   }
 
   loadItem(itemId: string) {
-    this.service.getItem<ChessOpeningTraining>(itemId)
+    this.trainingService.getItem<ChessOpeningTraining>(itemId)
       .subscribe(
         (data: ChessOpeningTraining) => {
           this.item = data;
           console.log('ChessOpeningTrainingEditComponent.loadItem : data = ' + JSON.stringify(data));
           console.log('ChessOpeningTrainingEditComponent.loadItem : OK for id = ' + itemId);
-          this.board.set(this.getBoardConfig());
+          this.updateBoardConfig();
         },
         (error: any) => {
           console.log('ChessOpeningTrainingEditComponent.loadItem : KO for id = ' + itemId);
@@ -174,13 +155,13 @@ export class ChessOpeningTrainingBaseComponent implements OnInit {
   }
 
   updateItem(itemId: string) {
-    this.service.updateItem<ChessOpeningTraining>(itemId, this.item)
+    this.trainingService.updateItem<ChessOpeningTraining>(itemId, this.item)
       .subscribe(
         (data: ChessOpeningTraining) => {
           this.item = data;
           console.log('ChessOpeningTrainingEditComponent.updateItem : data = ' + JSON.stringify(data));
           console.log('ChessOpeningTrainingEditComponent.updateItem : OK for id = ' + itemId);
-          this.board.set(this.getBoardConfig());
+          this.updateBoardConfig();
         },
         (error: any) => {
           console.log('ChessOpeningTrainingEditComponent.updateItem : KO for id = ' + itemId);
@@ -190,7 +171,7 @@ export class ChessOpeningTrainingBaseComponent implements OnInit {
   }
 
   deleteItem(itemId: string) {
-    this.service.deleteItem<ChessOpeningTraining>(this.item.id)
+    this.trainingService.deleteItem<ChessOpeningTraining>(this.item.id)
       .subscribe(
         (data: ChessOpeningTraining) => {
           console.log('ChessOpeningTrainingEditComponent.deleteItem : OK for id = ' + itemId);

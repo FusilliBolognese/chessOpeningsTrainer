@@ -1,26 +1,41 @@
-import { CommonService } from './common.service';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChessOpeningTraining } from '../models/chess-opening-training.model';
+import { CommonItemService, CommonListService } from './common.service';
 
-export class ChessOpeningTrainingService {
-    constructor(private service: CommonService) {
-        this.service.endPoint = 'http://127.0.0.1:3108/api/trainings/';
+
+/*
+    ChessOpeningTrainingListService
+    service for operations on a list of opening training :
+        GET opening training list
+        POST a new opening training
+*/
+@Injectable({
+    providedIn: 'root'
+})
+export class ChessOpeningTrainingListService extends CommonListService {
+
+    constructor(public http: HttpClient) {
+        super(http);
+        this.endPoint = 'http://localhost:3108/choper/api/trainings';
     }
 
-    getItems(): ChessOpeningTraining[] {
-        let items: ChessOpeningTraining[];
-        this.service.getItems<ChessOpeningTraining>()
-            .subscribe(
-                (data: ChessOpeningTraining[]) => {
-                    items = data;
-                    console.log('load trainings OK');
-                },
-                (error: any) => {
-                    console.log('load trainings KO : ' + error.toString());
-                }
-            );
-        return items;
-    }
 }
 
+/*
+    ChessOpeningTrainingService
+    service for operations on a single opening training :
+        GET an opening training
+        UPDATE an opening training
+        DELETE an opening training
+*/
+@Injectable({
+    providedIn: 'root'
+})
+export class ChessOpeningTrainingService extends CommonItemService {
 
+    constructor(public http: HttpClient) {
+        super(http);
+        this.endPoint = 'http://localhost:3108/choper/api/trainings/';
+    }
+
+}

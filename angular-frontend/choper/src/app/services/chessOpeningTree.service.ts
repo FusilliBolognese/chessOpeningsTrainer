@@ -1,26 +1,41 @@
-import { CommonService } from './common.service';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ChessOpeningTree } from '../models/chess-opening-tree.model';
+import { CommonItemService, CommonListService } from './common.service';
 
-export class ChessOpeningTreeService {
-    constructor(private service: CommonService) {
-        this.service.endPoint = 'http://127.0.0.1:3108/api/openings/';
+
+/*
+    ChessOpeningTreeListService
+    service for operations on a list of opening tree :
+        GET opening tree list
+        POST a new opening tree
+*/
+@Injectable({
+    providedIn: 'root'
+})
+export class ChessOpeningTreeListService extends CommonListService {
+
+    constructor(public http: HttpClient) {
+        super(http);
+        this.endPoint = 'http://localhost:3108/choper/api/openings';
     }
 
-    getItems(): ChessOpeningTree[] {
-        let items: ChessOpeningTree[];
-        this.service.getItems<ChessOpeningTree>()
-            .subscribe(
-                (data: ChessOpeningTree[]) => {
-                    items = data;
-                    console.log('load opening trees OK');
-                },
-                (error: any) => {
-                    console.log('load opening trees KO : ' + error.toString());
-                }
-            );
-        return items;
-    }
 }
 
+/*
+    ChessOpeningTreeService
+    service for operations on an opening tree :
+        GET an opening tree
+        UPDATE an opening tree
+        DELETE an opening tree
+*/
+@Injectable({
+    providedIn: 'root'
+})
+export class ChessOpeningTreeService extends CommonItemService {
 
+    constructor(public http: HttpClient) {
+        super(http);
+        this.endPoint = 'http://localhost:3108/choper/api/openings/';
+    }
+
+}

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessOpeningTree } from '../models/chess-opening-tree.model';
-import { ChessOpeningTreeService } from '../services/chessOpeningTree.service';
-import { CommonService } from '../services/common.service';
+import { ChessOpeningTreeService, ChessOpeningTreeListService } from '../services/chessOpeningTree.service';
 
 @Component({
   selector: 'app-opening-tree-list',
@@ -11,8 +10,7 @@ import { CommonService } from '../services/common.service';
 export class ChessOpeningTreeListComponent implements OnInit {
   items: ChessOpeningTree[];
 
-  constructor(private service: CommonService) {
-    this.service.endPoint = 'http://localhost:3108/choper/api/openings';
+  constructor(private treeListService: ChessOpeningTreeListService) {
   }
 
   ngOnInit(): void {
@@ -20,7 +18,7 @@ export class ChessOpeningTreeListComponent implements OnInit {
   }
 
   loadItems() {
-    this.service.getItems<ChessOpeningTree>()
+    this.treeListService.getItems<ChessOpeningTree>()
       .subscribe(
         (data: ChessOpeningTree[]) => {
           this.items = data;

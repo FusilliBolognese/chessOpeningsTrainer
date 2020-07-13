@@ -1,14 +1,17 @@
 <div id="ground" class="marble merida" style="width: 500px;height: 500px"></div>
 <br>
-<div *ngIf="item">
+<!--div *ngIf="item">
   <p>id : {{item.id}}</p>
-  <p>date_created : {{item.date_created}}</p>
+  <p>date_created : {{item.date_created | dateTimeFormat}}</p>
+  <p>date_lastmodified : {{item.date_lastmodified | dateTimeFormat}}</p>
   <p>pgn_text: {{item.pgn_text}}</p>
-  <p>score: {{item.score}}</p>
   <p>side: {{item.turn}}</p>
   <p>opening_tree: {{item.opening_tree}}</p>
-  <p>eco_code : {{item.eco_code}}</p>
   <p>fen: {{item.fen}}</p>
   <p>move number: {{item.move_number}}</p>
   <p>moves: {{item.legal_moves}}</p>
+</div-->
+<div *ngIf="item.opening_tree">
+  <p>Opening Tree : {{item.opening_tree | openingNameFormat}}</p>
 </div>
+<button (click)="deleteItem()" type="delete">Delete</button>

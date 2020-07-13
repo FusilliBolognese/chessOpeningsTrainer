@@ -9,8 +9,8 @@ class ChessOpeningTree(models.Model):
     opening_name = models.CharField(max_length=255)
     eco_code = models.CharField(max_length=10, default='A00')
 
-    def loadPgn(self):
-        self.game = pgn.read_game(self.pgn_text)
+    def __str__(self):
+        return '{eco_code:' + self.eco_code + ', opening_name:' + self.opening_name + '}'
 
 
 COLORS = [
@@ -39,30 +39,10 @@ class ChessOpeningTraining(models.Model):
     is_chess360 = models.BooleanField(default=False)
     opening_tree = models.ForeignKey(
         ChessOpeningTree, on_delete=models.CASCADE)
-    # pgn_text = models.TextField(null=True, blank=True)
     uci_text = models.TextField(null=True, blank=True)
-    # fen = models.TextField(null=True, blank=True, default='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
-    score = models.IntegerField(default=0)
-    # side = models.CharField(max_length=1, choices=COLORS, default='w')
-    # last_san_move = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return '{date_created:' + str(self.date_created) + ', opening_tree:' + str(self.opening_tree) + '}'
 
-"""
-class ChessMove(models.Model):
-    opening_training = models.ForeignKey(
-        ChessOpeningTraining, on_delete=models.CASCADE)
-    number = models.IntegerField()
-    side = models.CharField(max_length=1, choices=COLORS, default='w')
-    from_square_id = models.IntegerField()
-    to_square_id = models.IntegerField()
-    promotion_piece_type_id = models.IntegerField()
-"""
-
-
-class ChessMove(object):
-    def __init__(self, number, side, fromSquare, toSquare, promotionType):
-        self.number = number
-        self.side = side
-        self.fromSquare = fromSquare
-        self.toSquare = toSquare
-        self.promotionType = promotionType
+    class Meta:
+        ordering = ['date_lastmodified']
