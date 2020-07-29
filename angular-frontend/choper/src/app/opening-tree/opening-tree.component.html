@@ -1,7 +1,17 @@
 <p>opening-tree works!</p>
-<div *ngIf="item">
-  <p>{{item.id}}</p>
-  <p>{{item.pgn_text}}</p>
-  <p>{{item.opening_name}}</p>
-  <p>{{item.eco_code}}</p>
-</div>
+<ng-template [ngIf]="item">
+  <div>
+    <label>{{item.id}}</label>
+    <label>Code ECO : </label>
+    <input [(ngModel)]="item.eco_code" />
+    <br>
+    <p>Opening name : </p>
+    <input [(ngModel)]="item.opening_name" />
+    <br>
+    <p>PGN :</p>
+    <input [(ngModel)]="item.pgn_text" />
+    <br>
+    <button (click)="submit()" type="Submit">Submit</button>
+    <button (click)="cancel()" type="Cancel">Cancel</button>
+  </div>
+</ng-template>

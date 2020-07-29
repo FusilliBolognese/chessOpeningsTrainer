@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ChessOpeningTree } from '../models/chess-opening-tree.model';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ChessOpeningTreeService } from '../services/chessOpeningTree.service';
 
@@ -15,6 +15,7 @@ export class ChessOpeningTreeComponent implements OnInit {
 
   constructor(
     private treeService: ChessOpeningTreeService,
+    private router: Router,
     private route: ActivatedRoute,
     private location: Location) {
   }
@@ -43,6 +44,26 @@ export class ChessOpeningTreeComponent implements OnInit {
           console.log('erreur : ' + error.toString());
         }
       );
+  }
+
+  submit() {
+    this.treeService.updateItem<ChessOpeningTree>(this.itemId, this.item)
+      .subscribe(
+        (data: ChessOpeningTree) => {
+          this.item = data;
+          console.log('ChessOpeningTreeComponent.submit : data = ' + data);
+          console.log('ChessOpeningTreeComponent.submit : OK pour id = ' + this.itemId);
+          this.router.navigate(['openings']);
+        },
+        (error: any) => {
+          console.log('ChessOpeningTreeComponent.submit : KO pour id = ' + this.itemId);
+          console.log('erreur : ' + error.toString());
+        }
+      );
+  }
+
+  cancel() {
+    this.router.navigate(['openings']);
   }
 
 }

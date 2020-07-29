@@ -22,11 +22,12 @@ export class ChessOpeningTreeListComponent implements OnInit {
       .subscribe(
         (data: ChessOpeningTree[]) => {
           this.items = data;
+          console.log('ChessOpeningTreeListService.loadItems OK : ');
           console.log(data);
-          console.log('loadOpeningTrees OK');
         },
         (error: any) => {
-          console.log('loadOpeningTrees KO : ' + error.toString());
+          console.log('ChessOpeningTreeListService.loadItems KO : ');
+          console.log(error.toString());
         }
       );
   }

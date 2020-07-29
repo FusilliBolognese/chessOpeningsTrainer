@@ -14,8 +14,18 @@ import chess
 import chess.pgn
 
 
-def getListData(model, modelLightSerializer):
-    items = model.objects.all()
+def getListData(request, model, modelLightSerializer):
+    filterQueryParam = request.GET.get('filter')
+    sortAttributesQueryParam = request.GET.get('sortAttributes')
+    #sortOrderQueryParam = request.GET.get('sortOrder')
+    pageNumberQueryParam = request.GET.get('pageNumber')
+    pageSizeQueryParam = request.GET.get('pageSize')
+    print('filterQueryParam : ', filterQueryParam)
+    print('sortAttributesQueryParam : ', sortAttributesQueryParam)
+    print('sortOrderQueryParam : ', sortOrderQueryParam)
+    print('pageNumberQueryParam : ', pageNumberQueryParam)
+    print('pageSizeQueryParam : ', pageSizeQueryParam)
+    items = model.objects.filter() .all()
     serializer = modelLightSerializer(items, many=True)
     print('[OK] getListData.serializer.data : ', serializer.data)
     return JsonResponse(serializer.data, safe=False)
@@ -46,7 +56,7 @@ def deleteList(model):
 def perform_list(request, model, modelSerializer, modelLightSerializer):
     """ GET returns all the objects of the collection """
     if request.method == 'GET':
-        return getListData(model, modelLightSerializer)
+        return getListData(request, model, modelLightSerializer)
 
     """ POST add a new object """
     if request.method == 'POST':

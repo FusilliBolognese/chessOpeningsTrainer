@@ -1,4 +1,5 @@
 <p>opening-training-list works!</p>
+<!--
 <div>
   <table width="100%">
     <thead>
@@ -13,7 +14,7 @@
       <tr *ngFor="let item of items; index as i">
         <td class="cell">{{item.id}}</td>
         <td class="cell">{{item.date_created | dateTimeFormat }}</td>
-        <td class="cell">{{item.score}}</td>
+        <td class="cell">{{item.move_number}}</td>
         <td class="cell">{{item.opening_tree | openingNameFormat}}</td>
         <td class="cell">
           <button routerLink="/trainings/{{item.id}}">Edit</button>
@@ -23,7 +24,41 @@
     </tbody>
   </table>
 </div>
+-->
 
 <div>
   <button routerLink="/trainings/add">New</button>
+</div>
+
+<div class='training'>
+
+  <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell class="id-cell" *matCellDef="let item"> {{item.id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+      <mat-cell class="date-cell" *matCellDef="let item"> {{item.date_created | dateTimeFormat}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+      <mat-header-cell *matHeaderCellDef> Score </mat-header-cell>
+      <mat-cell class="score-cell" *matCellDef="let item"> {{item.move_number}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="opening">
+      <mat-header-cell *matHeaderCellDef> Opening Name </mat-header-cell>
+      <mat-cell class="opening-cell" *matCellDef="let item"> {{item.opening_tree | openingNameFormat}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+  </mat-table>
+  <mat-paginator [length]="dataSource.count" [pageSize]="3" [pageSizeOptions]="[3, 5, 10]"></mat-paginator>
 </div>

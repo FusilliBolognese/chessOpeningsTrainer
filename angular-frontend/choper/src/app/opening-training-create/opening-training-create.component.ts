@@ -18,13 +18,13 @@ export class ChessOpeningTrainingCreateComponent implements OnInit {
   selectedTree: ChessOpeningTree = null;
 
   constructor(
-    public trainingService: ChessOpeningTrainingService,
-    public trainingListService: ChessOpeningTrainingListService,
-    public treeService: ChessOpeningTreeService,
-    public treeListService: ChessOpeningTreeListService,
-    public router: Router,
-    public route: ActivatedRoute,
-    public location: Location,
+    //private trainingService: ChessOpeningTrainingService,
+    private trainingListService: ChessOpeningTrainingListService,
+    //private treeService: ChessOpeningTreeService,
+    private treeListService: ChessOpeningTreeListService,
+    private router: Router,
+    private route: ActivatedRoute,
+    //private location: Location,
   ) {
   }
 
@@ -79,14 +79,14 @@ export class ChessOpeningTrainingCreateComponent implements OnInit {
     this.router.navigate(['trainings', this.item.id]);
   }
 
-  saveItem(gototraining) {
+  saveItem(callback) {
     console.log('ChessOpeningTrainingComponent.saveItem item = ' + JSON.stringify(this.item));
     this.trainingListService.addItem<ChessOpeningTraining>(this.item)
       .subscribe(
         (data: ChessOpeningTraining) => {
           this.item = data;
           console.log('ChessOpeningTrainingComponent.saveItem OK : data = ' + JSON.stringify(this.item));
-          gototraining();
+          callback();
           // this.updateBoardConfig();
           // this.goBack();
           // console.log('ChessOpeningTrainingComponent.saveItem : OK for id = ' + this.item.id); this.goBack();
