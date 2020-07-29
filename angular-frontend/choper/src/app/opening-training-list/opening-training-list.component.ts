@@ -29,7 +29,7 @@ export class ChessOpeningTrainingListComponent implements OnInit {
     //this.loadItems();
     this.dataSource = new ChessOpeningTrainingListDataSource(this.trainingListService);
     this.dataSource.loadTrainings({
-      'filter': 'opening_tree_id=3,variant=chess',
+      //'filter': 'opening_tree_id=3,variant=chess',
       'sortAttributes': '-date_lastmodified',
       'pageNumber': 0,
       'pageSize': 5

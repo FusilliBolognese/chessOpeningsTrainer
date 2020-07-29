@@ -10,7 +10,7 @@ import { ChessOpeningTrainingEditComponent } from './opening-training-edit/openi
 import { ChessOpeningTrainingCreateComponent } from './opening-training-create/opening-training-create.component';
 
 
-const routes: Routes = [
+export const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' },
   { path: 'openings/:id', component: ChessOpeningTreeComponent },
   { path: 'openings', component: ChessOpeningTreeListComponent },
@@ -23,6 +23,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule { }

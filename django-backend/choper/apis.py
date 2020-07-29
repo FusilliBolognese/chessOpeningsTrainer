@@ -14,19 +14,29 @@ import chess
 import chess.pgn
 
 
-def getListData(request, model, modelLightSerializer):
-    filterQueryParam = request.GET.get('filter')
+def getListData(request, model, modelSerializer):
+    """
+    get collection of data model object serialzed by modelSerializer
+
+    the collection can be 
+    - filtered by filter params
+    - sorted by sortAttributes params
+    - paginated with pageNumber & pageSize params
+    """
+    filterQueryParams = request.GET.get('filter')
     sortAttributesQueryParam = request.GET.get('sortAttributes')
     #sortOrderQueryParam = request.GET.get('sortOrder')
     pageNumberQueryParam = request.GET.get('pageNumber')
     pageSizeQueryParam = request.GET.get('pageSize')
-    print('filterQueryParam : ', filterQueryParam)
+    print('filterQueryParams : ', filterQueryParams)
     print('sortAttributesQueryParam : ', sortAttributesQueryParam)
-    print('sortOrderQueryParam : ', sortOrderQueryParam)
+    #print('sortOrderQueryParam : ', sortOrderQueryParam)
     print('pageNumberQueryParam : ', pageNumberQueryParam)
     print('pageSizeQueryParam : ', pageSizeQueryParam)
-    items = model.objects.filter() .all()
-    serializer = modelLightSerializer(items, many=True)
+
+    queryset = model.objects.all()
+
+    serializer = modelSerializer(queryset, many=True)
     print('[OK] getListData.serializer.data : ', serializer.data)
     return JsonResponse(serializer.data, safe=False)
 
